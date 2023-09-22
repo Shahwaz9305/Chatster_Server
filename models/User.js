@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
   },
   about: {
     type: String,
-    default: "",
+    default: "Hey there i am using Chatster",
   },
   lastOnline: {
     type: Date,
@@ -49,14 +49,21 @@ const userSchema = new mongoose.Schema({
   rooms: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: "Room",
+      ref: "Rooms",
       default: null,
     },
   ],
   contacts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
+      default: null,
+    },
+  ],
+  ContactRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       default: null,
     },
   ],
