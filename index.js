@@ -13,7 +13,8 @@ app.use(cors());
 const { home } = require("./controller/homeController");
 
 // importing routes
-app.use("/api/chats", require("./routes/chat"));
+app.use("/api/user", require("./routes/userRoute"));
+app.use("/api/chats", require("./routes/chatRoute"));
 
 // Conneting to the database
 mongoose
