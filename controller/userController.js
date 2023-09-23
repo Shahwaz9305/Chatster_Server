@@ -107,7 +107,7 @@ module.exports.getUser = async (req, res, next) => {
 // Get contacts of a User
 module.exports.getContacts = async (req, res, next) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.params;
     const user = await User.findById(userId).populate("contacts");
 
     let contacts = user.contacts;

@@ -21,6 +21,6 @@ router.get("/getUser/:userId", getUser);
 router.post("/addContact", addContact);
 
 // Get Contact of the User
-router.get("/getContacts", getContacts);
+router.get("/getContacts/:userId", getContacts);
 
 module.exports = router;
