@@ -15,7 +15,7 @@ router.post("/register", registerUser);
 router.post("/login", logIn);
 
 // Find User By Id
-router.get("/getUser", getUser);
+router.get("/getUser/:userId", getUser);
 
 // Add Contact Route
 router.post("/addContact", addContact);

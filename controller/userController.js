@@ -90,7 +90,7 @@ module.exports.addContact = async (req, res, next) => {
 // Find User by Id
 module.exports.getUser = async (req, res, next) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
     let user = await User.findById({ _id: userId });
 
