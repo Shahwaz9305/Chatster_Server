@@ -55,6 +55,7 @@ module.exports.logIn = async (req, res, next) => {
     if (!matchPassword) return res.send("Icorrect Password");
 
     user = _.pick(user, [
+      "_id",
       "userName",
       "firstName",
       "lastName",
