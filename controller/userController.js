@@ -39,7 +39,7 @@ module.exports.registerUser = async (req, res, next) => {
   }
 };
 
-// SigIn User
+// logIn User
 module.exports.logIn = async (req, res, next) => {
   try {
     const { authWith, password } = req.body;
