@@ -18,7 +18,6 @@ module.exports.getChat = async (req, res, next) => {
         timestamp: chat.createdAt,
       };
     });
-    console.log(modifedChats);
     res.send(modifedChats);
   } catch (err) {
     next(err);
