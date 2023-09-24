@@ -3,9 +3,23 @@ const Chat = require("../models/Chat");
 // get all chats of on conversation with particualar user
 module.exports.getChat = async (req, res, next) => {
   try {
-    const { userId, friendId } = req.body;
-    const chats = await Chat.find({ sender: userId, receiver: friendId });
-    res.send(chats);
+    const { userId, friendId } = req.params;
+    const chats = await Chat.find({
+      $or: [
+        { sender: userId, receiver: friendId },
+        { receiver: userId, sender: friendId },
+      ],
+    });
+
+    const modifedChats = chats.map((chat) => {
+      return {
+        type: chat.sender.equals(userId) ? "send" : "receive",
+        message: chat.content,
+        timestamp: chat.createdAt,
+      };
+    });
+    console.log(modifedChats);
+    res.send(modifedChats);
   } catch (err) {
     next(err);
   }
