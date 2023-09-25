@@ -8,11 +8,35 @@ module.exports = function sockets(server) {
     },
   });
 
+  global.onlineUser = new Map();
   io.on("connection", (socket) => {
-    console.log(`User Connected with id ${socket.id}`);
+    global.chatSocket = socket;
 
+    // On user connect
+    socket.on("addUser", (userId) => {
+      if (!onlineUser.has(userId)) {
+        onlineUser.set(userId, socket.id);
+      }
+    });
+
+    // Send Message
+    socket.on("sendMessage", (data) => {
+      const userSocketId = onlineUser.get(data.to);
+      const { type, message, timestamp } = data;
+      const newData = { type: "receive", message, timestamp };
+      if (userSocketId) {
+        socket.to(userSocketId).emit("recieveMessage", newData);
+      }
+    });
+
+    // On disconnect
     socket.on("disconnect", () => {
-      console.log("User Disconnected");
+      // remove from online user Map
+      for (let [key, value] of onlineUser.entries()) {
+        if (value === socket.id) {
+          onlineUser.delete(key);
+        }
+      }
     });
   });
 };
