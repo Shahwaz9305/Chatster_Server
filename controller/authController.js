@@ -7,6 +7,6 @@ module.exports.auth = async (req, res, next) => {
 
     res.send(decodedToken);
   } catch (err) {
-    next(err);
+    res.status(401).send("Unauthorized Access");
   }
 };

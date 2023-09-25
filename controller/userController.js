@@ -49,7 +49,9 @@ module.exports.logIn = async (req, res, next) => {
       { email: authWith },
     ]);
     if (!user)
-      return res.send("User with this User Name or Email dosen't Exist");
+      return res
+        .status(404)
+        .send("User with this User Name or Email dosen't Exist");
 
     const matchPassword = await bcrypt.compare(password, user.password);
     if (!matchPassword) return res.send("Icorrect Password");
