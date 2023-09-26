@@ -16,6 +16,7 @@ const { home } = require("./controller/homeController");
 app.use("/api/user", require("./routes/userRoute"));
 app.use("/api/chats", require("./routes/chatRoute"));
 app.use("/api/auth", require("./routes/authRoute"));
+app.use("/api/searchUser", require("./routes/searchUserRoute"));
 
 // Conneting to the database
 mongoose
