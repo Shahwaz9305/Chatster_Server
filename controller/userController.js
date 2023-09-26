@@ -78,7 +78,11 @@ module.exports.addContact = async (req, res, next) => {
   try {
     const { userId, contactId } = req.body;
 
-    const user = await User.updateOne(
+    let user = await User.findById(userId);
+    if (user.contacts.includes(contactId))
+      return res.status(200).send("User Already Present");
+
+    user = await User.updateOne(
       { _id: userId },
       { $push: { contacts: contactId } },
       { new: true }
