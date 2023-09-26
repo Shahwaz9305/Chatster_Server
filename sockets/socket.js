@@ -16,6 +16,7 @@ module.exports = function sockets(server) {
     socket.on("addUser", (userId) => {
       if (!onlineUser.has(userId)) {
         onlineUser.set(userId, socket.id);
+        io.emit("userConnectDisconnect", `connect ${socket.id}`);
       }
     });
 
@@ -29,6 +30,16 @@ module.exports = function sockets(server) {
       }
     });
 
+    // online Status
+
+    socket.on("isOnline", (selectedUserId) => {
+      if (onlineUser.has(selectedUserId)) {
+        socket.emit("online", "online");
+      } else {
+        socket.emit("online", "");
+      }
+    });
+
     // On disconnect
     socket.on("disconnect", () => {
       // remove from online user Map
@@ -37,6 +48,7 @@ module.exports = function sockets(server) {
           onlineUser.delete(key);
         }
       }
+      io.emit("userConnectDisconnect", `disconnect ${socket.id}`);
     });
   });
 };
