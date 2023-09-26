@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   userName: {
     type: String,
     required: true,
+    lowercase: true,
     minlength: 3,
     maxlength: 255,
   },
@@ -54,13 +55,6 @@ const userSchema = new mongoose.Schema({
     },
   ],
   contacts: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
-      default: null,
-    },
-  ],
-  ContactRequests: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
