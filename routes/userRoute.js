@@ -18,7 +18,7 @@ router.post("/login", logIn);
 router.get("/getUser/:userId", getUser);
 
 // Add Contact Route
-router.post("/addContact", addContact);
+router.put("/addContact", addContact);
 
 // Get Contact of the User
 router.get("/getContacts/:userId", getContacts);
