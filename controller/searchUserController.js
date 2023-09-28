@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const { User } = require("../models/User");
 const _ = require("lodash");
 
 module.exports.searchUser = async (req, res, next) => {
