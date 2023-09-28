@@ -1,4 +1,10 @@
-const User = require("../models/User");
+const {
+  User,
+  validateRegisterUserRequest,
+  validateLoginUserRequest,
+  validateAddContactRequest,
+  validateMongoDBId,
+} = require("../models/User");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
@@ -6,13 +12,17 @@ const jwt = require("jsonwebtoken");
 // Register User
 module.exports.registerUser = async (req, res, next) => {
   try {
-    const { userName, firstName, lastName, email, password, avatar } = req.body;
+    const { error } = validateRegisterUserRequest(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const { userName, firstName, lastName, password, avatar } = req.body;
 
     let user = await User.findOne({ userName: userName });
 
-    if (user) return res.send("User with this User Name Already Exist");
+    if (user)
+      return res.status(200).send("User with this User Name Already Exist");
     user = await User.findOne({ email: email });
-    if (user) return res.send("User with this Email Already exist");
+    if (user) return res.status(200).send("User with this Email Already exist");
 
     user = new User({
       userName,
@@ -33,7 +43,7 @@ module.exports.registerUser = async (req, res, next) => {
       "email",
       "avatar",
     ]);
-    res.send(savedUser);
+    res.status(200).send(savedUser);
   } catch (err) {
     next(err);
   }
@@ -42,19 +52,23 @@ module.exports.registerUser = async (req, res, next) => {
 // logIn User
 module.exports.logIn = async (req, res, next) => {
   try {
+    const { error } = validateLoginUserRequest(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
     const { authWith, password } = req.body;
 
     let user = await User.findOne().or([
       { userName: authWith },
       { email: authWith },
     ]);
+
     if (!user)
       return res
         .status(404)
         .send("User with this User Name or Email dosen't Exist");
 
     const matchPassword = await bcrypt.compare(password, user.password);
-    if (!matchPassword) return res.send("Icorrect Password");
+    if (!matchPassword) return res.status(403).send("Icorrect Password");
 
     user = _.pick(user, [
       "_id",
@@ -67,7 +81,7 @@ module.exports.logIn = async (req, res, next) => {
 
     const token = jwt.sign(user, process.env.JWT_SECRET_KEY);
 
-    res.send(token);
+    res.status(200).send(token);
   } catch (err) {
     next(err);
   }
@@ -76,6 +90,8 @@ module.exports.logIn = async (req, res, next) => {
 // Add Contact Route
 module.exports.addContact = async (req, res, next) => {
   try {
+    const { error } = validateAddContactRequest(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
     const { userId, contactId } = req.body;
 
     let user = await User.findById(userId);
@@ -88,7 +104,7 @@ module.exports.addContact = async (req, res, next) => {
       { new: true }
     );
 
-    res.send(user);
+    res.status(200).send("Contact Added Successfully");
   } catch (err) {
     next(err);
   }
@@ -104,7 +120,7 @@ module.exports.getUser = async (req, res, next) => {
     user = user.toObject();
     user = _.omit(user, "password");
 
-    res.send(user);
+    res.status(200).send(user);
   } catch (err) {
     next(err);
   }
@@ -130,7 +146,7 @@ module.exports.getContacts = async (req, res, next) => {
         "lastOnline",
       ])
     );
-    res.send(contacts);
+    res.status(200).send(contacts);
   } catch (err) {
     next(err);
   }
