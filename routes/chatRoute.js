@@ -5,8 +5,6 @@ const {
   postChat,
   updateChatStatus,
 } = require("../controller/chatController");
-const Chat = require("../models/Chat");
-const mongoose = require("mongoose");
 
 // get all chats of on conversation with particualar user
 router.get("/:userId/:friendId", getChat);

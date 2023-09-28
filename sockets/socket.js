@@ -23,7 +23,7 @@ module.exports = function sockets(server) {
     // Send Message
     socket.on("sendMessage", (data) => {
       const userSocketId = onlineUser.get(data.to);
-      const { type, message, timestamp } = data;
+      const { message, timestamp } = data;
       const newData = { type: "receive", message, timestamp };
       if (userSocketId) {
         socket.to(userSocketId).emit("recieveMessage", newData);
