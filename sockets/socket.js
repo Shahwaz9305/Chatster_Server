@@ -40,6 +40,15 @@ module.exports = function sockets(server) {
       }
     });
 
+    // isTyping
+
+    socket.on("typing", ({ from, to, isTyping }) => {
+      const userId = onlineUser.get(to);
+      socket
+        .to(userId)
+        .emit("isTyping", { currentSelectedUser: from, isTyping: isTyping });
+    });
+
     // On disconnect
     socket.on("disconnect", () => {
       // remove from online user Map
