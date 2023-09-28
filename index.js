@@ -7,22 +7,31 @@ const sockets = require("./sockets/socket");
 
 // Calling inbuilt midleware
 app.use(express.json());
-app.use(cors());
+
+const corsOptions = {
+  origin: ["http://localhost:3000"],
+  methods: ["GET", "PUT", "POST", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Importing controllers
 const { home } = require("./controller/homeController");
-
-// importing routes
-app.use("/api/user", require("./routes/userRoute"));
-app.use("/api/chats", require("./routes/chatRoute"));
-app.use("/api/decodeToken", require("./routes/decodeTokenRoute"));
-app.use("/api/searchUser", require("./routes/searchUserRoute"));
 
 // Conneting to the database
 mongoose
   .connect(process.env.DATABASE_URL)
   .then(() => console.log("Connected to the MongoDB..."))
   .catch((err) => console.log(err));
+
+// importing routes
+app.use("/api/user", require("./routes/userRoute"));
+app.use("/api/chats", require("./routes/chatRoute"));
+app.use("/api/decodeToken", require("./routes/decodeTokenRoute"));
+app.use("/api/searchUser", require("./routes/searchUserRoute"));
 
 // creating Home route
 app.get("/", home);
