@@ -41,7 +41,7 @@ module.exports.postChat = async (req, res, next) => {
     });
 
     const savedChat = await chat.save();
-    res.status(200).send(savedChat);
+    res.status(201).send(savedChat);
   } catch (err) {
     next(err);
   }

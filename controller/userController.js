@@ -17,12 +17,15 @@ module.exports.registerUser = async (req, res, next) => {
 
     const { userName, firstName, lastName, password, avatar } = req.body;
 
-    let user = await User.findOne({ userName: userName });
+    let user = await User.findOne().or([
+      { userName: userName },
+      { email: email },
+    ]);
 
     if (user)
-      return res.status(200).send("User with this User Name Already Exist");
-    user = await User.findOne({ email: email });
-    if (user) return res.status(200).send("User with this Email Already exist");
+      return res
+        .status(400)
+        .send({ error: "User with this username or email already exists" });
 
     user = new User({
       userName,
@@ -33,7 +36,7 @@ module.exports.registerUser = async (req, res, next) => {
       avatar,
     });
 
-    user.password = await bcrypt.hash(user.password, 10);
+    user.password = await bcrypt.hash(user.password, 12);
 
     let savedUser = await user.save();
     savedUser = _.pick(savedUser, [
@@ -43,7 +46,7 @@ module.exports.registerUser = async (req, res, next) => {
       "email",
       "avatar",
     ]);
-    res.status(200).send(savedUser);
+    res.status(201).send(savedUser);
   } catch (err) {
     next(err);
   }
