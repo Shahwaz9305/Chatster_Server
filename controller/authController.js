@@ -8,5 +8,6 @@ module.exports.auth = async (req, res, next) => {
     res.send(decodedToken);
   } catch (err) {
     res.status(401).send("Unauthorized Access");
+    next(err);
   }
 };
