@@ -12,6 +12,8 @@ class ChatServer {
     });
     this.onlineUser = new Map();
     this.setupEvents();
+
+    // Visit this url https://admin.socket.io/#/
     instrument(this.io, { auth: false });
   }
 
