@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { auth } = require("../controller/authController");
+const { decodeToken } = require("../controller/decodeTokenController");
 
-router.post("/", auth);
+router.post("/", decodeToken);
 
 module.exports = router;
