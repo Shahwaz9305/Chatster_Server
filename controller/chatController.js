@@ -1,4 +1,4 @@
-const Chat = require("../models/Chat");
+const { Chat, validatePostChatRequest } = require("../models/Chat");
 
 // get all chats of on conversation with particualar user
 module.exports.getChat = async (req, res, next) => {
@@ -18,7 +18,7 @@ module.exports.getChat = async (req, res, next) => {
         timestamp: chat.createdAt,
       };
     });
-    res.send(modifedChats);
+    res.status(200).send(modifedChats);
   } catch (err) {
     next(err);
   }
@@ -27,6 +27,9 @@ module.exports.getChat = async (req, res, next) => {
 // posting chats
 module.exports.postChat = async (req, res, next) => {
   try {
+    const { error } = validatePostChatRequest(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
     const { sender, receiver, content, room, status } = req.body;
 
     const chat = new Chat({
@@ -38,7 +41,7 @@ module.exports.postChat = async (req, res, next) => {
     });
 
     const savedChat = await chat.save();
-    res.send(savedChat);
+    res.status(200).send(savedChat);
   } catch (err) {
     next(err);
   }
