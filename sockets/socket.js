@@ -1,9 +1,10 @@
 module.exports = function sockets(server) {
   const socket = require("socket.io");
+  const { instrument } = require("@socket.io/admin-ui");
 
   const io = socket(server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: ["https://admin.socket.io", "http://localhost:3000"],
       credentials: true,
     },
   });
@@ -60,4 +61,5 @@ module.exports = function sockets(server) {
       io.emit("userConnectDisconnect", `disconnect ${socket.id}`);
     });
   });
+  instrument(io, { auth: false });
 };
