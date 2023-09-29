@@ -1,9 +1,13 @@
+require("express-async-errors");
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
+
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config();
 const sockets = require("./sockets/socket");
+const { errorHandler } = require("./middleware/errorHandler");
 
 // Calling inbuilt midleware
 app.use(express.json());
@@ -27,14 +31,17 @@ mongoose
   .then(() => console.log("Connected to the MongoDB..."))
   .catch((err) => console.log(err));
 
+// creating Home route
+app.get("/", home);
+
 // importing routes
 app.use("/api/user", require("./routes/userRoute"));
 app.use("/api/chats", require("./routes/chatRoute"));
 app.use("/api/decodeToken", require("./routes/decodeTokenRoute"));
 app.use("/api/searchUser", require("./routes/searchUserRoute"));
 
-// creating Home route
-app.get("/", home);
+// error Handling for req res pipeline
+app.use(errorHandler);
 
 // Intializing Dynamic port
 const port = process.env.PORT || 5000;

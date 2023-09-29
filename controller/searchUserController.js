@@ -1,32 +1,28 @@
 const { User } = require("../models/User");
 const _ = require("lodash");
 
-module.exports.searchUser = async (req, res, next) => {
-  try {
-    const { contactName, userName } = req.params;
-    let regex = new RegExp(`^${contactName}`, "i");
-    let users = await User.find({
-      userName: { $regex: regex },
-    });
+module.exports.searchUser = async (req, res) => {
+  const { contactName, userName } = req.params;
+  let regex = new RegExp(`^${contactName}`, "i");
+  let users = await User.find({
+    userName: { $regex: regex },
+  });
 
-    users = _.map(
-      users,
-      _.partialRight(_.pick, [
-        "_id",
-        "userName",
-        "firstName",
-        "lastName",
-        "email",
-        "avatar",
-        "about",
-        "lastOnline",
-      ])
-    );
+  users = _.map(
+    users,
+    _.partialRight(_.pick, [
+      "_id",
+      "userName",
+      "firstName",
+      "lastName",
+      "email",
+      "avatar",
+      "about",
+      "lastOnline",
+    ])
+  );
 
-    users = users.filter((user) => user.userName !== userName);
+  users = users.filter((user) => user.userName !== userName);
 
-    res.status(200).send(users);
-  } catch (err) {
-    next(err);
-  }
+  res.status(200).send(users);
 };
