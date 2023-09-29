@@ -43,6 +43,20 @@ app.use("/api/searchUser", require("./routes/searchUserRoute"));
 // error Handling for req res pipeline
 app.use(errorHandler);
 
+// catching unhandle exception
+process.on("uncaughtException", (ex) => {
+  console.log("We got an Exception");
+  console.log(ex);
+  process.exit(1);
+});
+
+// catching unhandle Rejection
+process.on("unhandledRejection", (ex) => {
+  console.log("We got a Rejection");
+  console.log(ex);
+  process.exit(1);
+});
+
 // Intializing Dynamic port
 const port = process.env.PORT || 5000;
 
