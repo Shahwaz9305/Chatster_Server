@@ -39,6 +39,7 @@ module.exports.registerUser = async (req, res) => {
 
   let savedUser = await user.save();
   savedUser = _.pick(savedUser, [
+    "_id",
     "userName",
     "firstName",
     "lastName",
@@ -133,4 +134,14 @@ module.exports.getContacts = async (req, res) => {
     ])
   );
   res.status(200).send(contacts);
+};
+
+module.exports.setAvatar = async (req, res) => {
+  const { id, avatar } = req.body;
+  const user = await User.findByIdAndUpdate(
+    id,
+    { avatar: avatar },
+    { new: true }
+  );
+  res.status(200).send(user);
 };

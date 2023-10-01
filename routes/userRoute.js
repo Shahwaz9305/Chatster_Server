@@ -6,6 +6,7 @@ const {
   addContact,
   getUser,
   getContacts,
+  setAvatar,
 } = require("../controller/userController");
 
 // Register User Route
@@ -22,5 +23,8 @@ router.put("/addContact", addContact);
 
 // Get Contact of the User
 router.get("/getContacts/:userId", getContacts);
+
+// Set Avatar of the user
+router.put("/setAvatar", setAvatar);
 
 module.exports = router;
