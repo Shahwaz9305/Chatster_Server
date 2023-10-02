@@ -4,6 +4,7 @@ const {
   getChat,
   postChat,
   updateChatStatus,
+  getLastChat,
 } = require("../controller/chatController");
 
 // get all chats of on conversation with particualar user
@@ -14,5 +15,8 @@ router.post("/", postChat);
 
 // update chat Status
 router.put("/", updateChatStatus);
+
+// get Last chat
+router.get("/getLastChat/:userId/:friendId", getLastChat);
 
 module.exports = router;

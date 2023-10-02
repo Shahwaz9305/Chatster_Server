@@ -48,3 +48,23 @@ module.exports.updateChatStatus = async (req, res) => {
   const updatedChat = await chat.save();
   res.send(updatedChat);
 };
+
+module.exports.getLastChat = async (req, res) => {
+  const { userId, friendId } = req.params;
+  const chat = await Chat.findOne({
+    $or: [
+      { sender: userId, receiver: friendId },
+      { receiver: userId, sender: friendId },
+    ],
+  })
+    .limit(1)
+    .sort("-createdAt");
+
+  const modifedChats = {
+    type: chat?.sender.equals(userId) ? "send" : "receive",
+    message: chat?.content,
+    timestamp: chat?.createdAt,
+  };
+
+  res.status(200).send(modifedChats);
+};
