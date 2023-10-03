@@ -1,5 +1,6 @@
 const socket = require("socket.io");
 const { instrument } = require("@socket.io/admin-ui");
+const { User } = require("../models/User");
 
 class ChatServer {
   // Constructor Function
@@ -75,6 +76,16 @@ class ChatServer {
   disconnect(socket) {
     for (let [key, value] of this.onlineUser.entries()) {
       if (value === socket.id) {
+        const now = new Date();
+        async function updateLastOnline(userId) {
+          const user = await User.findOneAndUpdate(
+            { _id: userId },
+            { lastOnline: now.toISOString() },
+            { new: true }
+          );
+        }
+
+        updateLastOnline(key);
         this.onlineUser.delete(key);
       }
     }
