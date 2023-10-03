@@ -16,7 +16,4 @@ router.post("/", postChat);
 // update chat Status
 router.put("/", updateChatStatus);
 
-// get Last chat
-router.get("/getLastChat/:userId/:friendId", getLastChat);
-
 module.exports = router;
