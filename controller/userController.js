@@ -8,6 +8,7 @@ const {
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
+const { Chat } = require("../models/Chat");
 
 // Register User
 module.exports.registerUser = async (req, res) => {
@@ -133,6 +134,25 @@ module.exports.getContacts = async (req, res) => {
       "lastOnline",
     ])
   );
+
+  for (const contact of contacts) {
+    const chat = await Chat.findOne({
+      $or: [
+        { sender: userId, receiver: contact._id },
+        { receiver: userId, sender: contact._id },
+      ],
+    })
+      .limit(1)
+      .sort("-createdAt");
+
+    const lastChatInfo = {
+      lastChat: chat?.content,
+      lastChatTimestamp: chat?.createdAt,
+    };
+
+    Object.assign(contact, lastChatInfo);
+  }
+
   res.status(200).send(contacts);
 };
 
