@@ -51,8 +51,14 @@ class ChatServer {
 
   sendMessage(data, socket) {
     const userSocketId = this.onlineUser.get(data.to);
-    const { message, timestamp, from } = data;
-    const newData = { type: "receive", message, timestamp, receiver: from };
+    const { message, timestamp, from, contentType } = data;
+    const newData = {
+      type: "receive",
+      message,
+      timestamp,
+      receiver: from,
+      contentType,
+    };
     if (userSocketId) {
       socket.to(userSocketId).emit("recieveMessage", newData);
     }
