@@ -1,4 +1,9 @@
-const { Chat, validatePostChatRequest } = require("../models/Chat");
+const { renameSync } = require("fs");
+const {
+  Chat,
+  validatePostChatRequest,
+  validateImagePostChatRequest,
+} = require("../models/Chat");
 
 // get all chats of on conversation with particualar user
 module.exports.getChat = async (req, res) => {
@@ -49,4 +54,34 @@ module.exports.updateChatStatus = async (req, res) => {
   chat.status = newChatStatus;
   const updatedChat = await chat.save();
   res.send(updatedChat);
+};
+
+// Add image message
+
+module.exports.addImageMessage = async (req, res, next) => {
+  const { error } = validateImagePostChatRequest(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { sender, receiver, room, status, contentType } = req.body;
+  let filename = "";
+  if (req.file) {
+    const date = Date.now();
+    filename = "uploads/images/" + date + req.file.originalname;
+    renameSync(req.file.path, filename);
+  } else {
+    res.status(400).send("Image is Required");
+  }
+
+  const chat = new Chat({
+    sender,
+    receiver,
+    content: filename,
+    room,
+    status,
+    contentType,
+  });
+
+  const savedChat = await chat.save();
+
+  res.status(201).send(savedChat);
 };
