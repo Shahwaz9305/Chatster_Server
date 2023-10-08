@@ -79,3 +79,41 @@ module.exports.validatePostChatRequest = (data) => {
 
   return schema.validate(data);
 };
+
+// validating Image Post chat request
+module.exports.validateImagePostChatRequest = (data) => {
+  const schema = Joi.object({
+    sender: Joi.string()
+      .regex(/^[0-9a-fA-F]{24}$/)
+      .required()
+      .messages({
+        "string.empty": "Sender ID cannot be empty",
+        "string.pattern.base": "Sender ID must be a valid MongoDB ObjectId",
+      }),
+
+    receiver: Joi.string()
+      .regex(/^[0-9a-fA-F]{24}$/)
+      .required()
+      .messages({
+        "string.empty": "Receiver ID cannot be empty",
+        "string.pattern.base": "Receiver ID must be a valid MongoDB ObjectId",
+      }),
+
+    room: Joi.array()
+      .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
+      .messages({
+        "array.base": "Room must be an array of MongoDB ObjectIds",
+      }),
+    contentType: Joi.string()
+      .valid("text", "image", "audio", "video", "file")
+      .messages({
+        "any.only":
+          'Message type must be one of "text", "image", "audio", "video", "file"',
+      }),
+    status: Joi.string().valid("sent", "recieved", "read").messages({
+      "any.only": 'Status must be one of "send", "received", or "read"',
+    }),
+  });
+
+  return schema.validate(data);
+};
