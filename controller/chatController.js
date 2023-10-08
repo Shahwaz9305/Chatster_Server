@@ -15,6 +15,7 @@ module.exports.getChat = async (req, res) => {
       type: chat.sender.equals(userId) ? "send" : "receive",
       message: chat.content,
       timestamp: chat.createdAt,
+      contentType: chat.contentType,
     };
   });
   res.status(200).send(modifedChats);
@@ -25,7 +26,7 @@ module.exports.postChat = async (req, res) => {
   const { error } = validatePostChatRequest(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { sender, receiver, content, room, status } = req.body;
+  const { sender, receiver, content, room, status, contentType } = req.body;
 
   const chat = new Chat({
     sender,
@@ -33,6 +34,7 @@ module.exports.postChat = async (req, res) => {
     content,
     room,
     status,
+    contentType,
   });
 
   const savedChat = await chat.save();
