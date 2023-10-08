@@ -148,6 +148,7 @@ module.exports.getContacts = async (req, res) => {
     const lastChatInfo = {
       lastChat: chat?.content,
       lastChatTimestamp: chat?.createdAt,
+      lastChatType: chat.contentType,
     };
 
     Object.assign(contact, lastChatInfo);
