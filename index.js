@@ -34,6 +34,9 @@ mongoose
 // creating Home route
 app.get("/", home);
 
+// serve static get image requests
+app.use("/uploads/images", express.static("uploads/images"));
+
 // importing routes
 app.use("/api/user", require("./routes/userRoute"));
 app.use("/api/chats", require("./routes/chatRoute"));
