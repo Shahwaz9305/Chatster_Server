@@ -18,6 +18,12 @@ const chatSchema = new mongoose.Schema(
     room: {
       type: mongoose.Schema.Types.ObjectId,
     },
+    type: {
+      type: String,
+      required: true,
+      enum: ["text", "image", "audio", "video", "file"],
+      default: "text",
+    },
     status: {
       type: String,
       required: true,
@@ -60,7 +66,12 @@ module.exports.validatePostChatRequest = (data) => {
       .messages({
         "array.base": "Room must be an array of MongoDB ObjectIds",
       }),
-
+    type: Joi.string()
+      .valid("text", "image", "audio", "video", "file")
+      .messages({
+        "any.only":
+          'Message type must be one of "text", "image", "audio", "video", "file"',
+      }),
     status: Joi.string().valid("sent", "recieved", "read").messages({
       "any.only": 'Status must be one of "send", "received", or "read"',
     }),
