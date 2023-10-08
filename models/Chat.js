@@ -18,7 +18,7 @@ const chatSchema = new mongoose.Schema(
     room: {
       type: mongoose.Schema.Types.ObjectId,
     },
-    type: {
+    contentType: {
       type: String,
       required: true,
       enum: ["text", "image", "audio", "video", "file"],
@@ -66,7 +66,7 @@ module.exports.validatePostChatRequest = (data) => {
       .messages({
         "array.base": "Room must be an array of MongoDB ObjectIds",
       }),
-    type: Joi.string()
+    contentType: Joi.string()
       .valid("text", "image", "audio", "video", "file")
       .messages({
         "any.only":
