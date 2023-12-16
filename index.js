@@ -12,7 +12,15 @@ const { errorHandler } = require("./middleware/errorHandler");
 // Calling inbuilt midleware
 app.use(express.json());
 
-app.use(cors());
+const corsOptions = {
+  origin: ["http://localhost:3000"],
+  methods: ["GET", "PUT", "POST", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Importing controllers
 const { home } = require("./controller/homeController");
